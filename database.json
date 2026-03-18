@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "title": "Steamboat Willie",
+    "year": 1928,
+    "genre": "Animation",
+    "plot": "Mickey Mouse pilots a steamboat and turns everything into musical instruments in his first official appearance.",
+    "poster": "https://image.tmdb.org/t/p/original/xEur3v9kMfw4zDueCh4wrUuhW5A.jpg",
+    "trailer": "https://www.youtube.com/embed/8LdpvQHg3e0?si=TVuuOCMdWiv2YanF",
+    "featured": false
+  },
+  {
+    "id": 2,
+    "title": "The Kid",
+    "year": 1921,
+    "genre": "Comedy / Drama",
+    "plot": "The Tramp cares for an abandoned child, but events put that relationship in jeopardy.",
+    "poster": "https://image.tmdb.org/t/p/original/cvWzCDo3pQyoasvqzRIP7oHK3qn.jpg",
+    "trailer": "https://www.youtube.com/embed/9pIyRBDpdAM?si=nlO24g7xSXp6Z8MN",
+    "featured": true
+  },
+  {
+    "id": 3,
+    "title": "Felix in Hollywood",
+    "year": 1923,
+    "genre": "Animation",
+    "plot": "Felix the Cat travels to Hollywood and meets the greatest stars of the silent film era.",
+    "poster": "https://image.tmdb.org/t/p/original/3P3ztTCe5jL0Rza8m5ZsUT5NhH7.jpg",
+    "trailer": "https://www.youtube.com/embed/7eSE5hzTyIo",
+    "featured": false
+  },
+  {
+    "id": 4,
+    "title": "Minnie the Moocher",
+    "year": 1932,
+    "genre": "Animation",
+    "plot": "Betty Boop runs away from home and ends up in a spooky cave with Cab Calloway.",
+    "poster": "https://image.tmdb.org/t/p/original/k6D27wXkz0hufbi9EtEqRXFXbcm.jpg",
+    "trailer": "https://www.youtube.com/embed/qFhMuFEtIh4?si=HSH-dyki13YEc6ya",
+    "featured": false
+  },
+  {
+    "id": 5,
+    "title": "A Trip to the Moon",
+    "year": 1902,
+    "genre": "Sci-Fi",
+    "plot": "A group of astronomers travel to the Moon in a cannon-propelled capsule and explore its surface.",
+    "poster": "https://image.tmdb.org/t/p/original/acBq3tmTcBAHCjbH7Wi5nt8jnfA.jpg",
+    "trailer": "https://www.youtube.com/embed/qcyZ70tO9-Q",
+    "featured": false
+  },
+  {
+    "id": 6,
+    "title": "Metropolis",
+    "year": 1927,
+    "genre": "Sci-Fi",
+    "plot": "In a futuristic city sharply divided between the working class and the city planners, the son of the city's mastermind falls in love with a working-class prophet who predicts the coming of a savior to mediate their differences.",
+    "poster": "https://image.tmdb.org/t/p/original/xBx21HvGJCb15PKWkyb7uc435Wx.jpg",
+    "trailer": "https://www.youtube.com/embed/gdtZv3XROnc",
+    "featured": false
+  },
+  {
+    "title": "Night of the Living Dead",
+    "year": 1968,
+    "genre": "Horror",
+    "plot": "A group of people hide from bloodthirsty zombies in a farmhouse.",
+    "poster": "https://image.tmdb.org/t/p/original/WPnjLV9hKP0TVZ8YJ0qWVWhUHF.jpg",
+    "trailer": "https://www.youtube.com/embed/H91BxkBXttE",
+    "featured": true,
+    "id": 7
+  }
+]
