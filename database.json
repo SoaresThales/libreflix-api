@@ -60,13 +60,23 @@
     "featured": false
   },
   {
+    "id": 7,
     "title": "Night of the Living Dead",
     "year": 1968,
     "genre": "Horror",
     "plot": "A group of people hide from bloodthirsty zombies in a farmhouse.",
     "poster": "https://image.tmdb.org/t/p/original/WPnjLV9hKP0TVZ8YJ0qWVWhUHF.jpg",
     "trailer": "https://www.youtube.com/embed/H91BxkBXttE",
-    "featured": true,
-    "id": 7
+    "featured": true
+  },
+  {
+    "id": 8,
+    "title": "The General",
+    "year": 1926,
+    "genre": "Comedy / Action",
+    "plot": "A train engineer tries to rescue his stolen locomotive during the American Civil War.",
+    "poster": "https://image.tmdb.org/t/p/original/6oY9F4Q2Z4fU6Y4ZCkxzgv2Fne5.jpg",
+    "trailer": "https://www.youtube.com/embed/8K4o5u2pRZ0",
+    "featured": false
   }
 ]
