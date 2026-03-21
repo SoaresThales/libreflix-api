@@ -1,44 +1,47 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-const PORT = 3000;
 
 // ==========================================
-// FUNÇÕES AUXILIARES (Bibliotecário)
+// CONEXÃO COM O MONGODB
 // ==========================================
-
-function readDatabase() {
-    try {
-        const data = fs.readFileSync(__dirname + '/database.json', 'utf-8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error("❌ Erro ao ler o banco de dados:", error);
-        return [];
-    }
-}
-
-function writeDatabase(movies) {
-    try {
-        fs.writeFileSync(__dirname + '/database.json', JSON.stringify(movies, null, 2));
-    } catch (error) {
-        console.error("❌ Erro ao salvar no banco de dados:", error);
-    }
-}
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/libreflix";
+mongoose.connect(MONGO_URL)
+    .then(() => console.log("Cofre do MongoDB aberto com sucesso!"))
+    .catch((error) => console.error("Erro ao conectar no MongoDB:", error));
 
 // ==========================================
-// SEGURANÇA
+// MODELO DE DADOS (Schema)
 // ==========================================
+const movieSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    year: { type: Number },
+    genre: { type: String, required: true },
+    plot: { type: String },
+    poster: { type: String, required: true }, 
+    backdrop: { type: String },               
+    trailer: { type: String },
+    featured: { type: Boolean, default: false }
+});
+const Movie = mongoose.model('Movie', movieSchema);
 
-const ADMIN_PASSWORD = "WeWillAwaysHaveParis"; // Precisa de aspas para ser uma String!
+// ==========================================
+// SEGURANÇA (Middleware)
+// ==========================================
+// Pega a senha com segurança extrema para não dar erro de "undefined"
+const rawPassword = process.env.ADMIN_PASSWORD || "WeWillAwaysHaveParis";
+const ADMIN_PASSWORD = String(rawPassword).trim();
 
 function checkAdmin(req, res, next) {
-    const passwordReceive = req.headers['admin-password'];
-    // Log para depuração:
-    console.log("Senha que chegou no servidor:", passwordReceive);
-    console.log("Senha que eu esperava:", ADMIN_PASSWORD);
+    // O req.headers só é lido aqui dentro!
+    const rawHeader = req.headers['admin-password'] || "";
+    const passwordReceive = String(rawHeader).trim();
+
     if (passwordReceive === ADMIN_PASSWORD) {
         next();
     } else {
@@ -47,66 +50,65 @@ function checkAdmin(req, res, next) {
 }
 
 // ==========================================
-// ROTAS
+// ROTAS (CRUD)
 // ==========================================
 
-app.get('/', function(req, res) {
-    res.send("Hello, world! My LibreFlix-API is alive!");
-});
-
-app.get('/api/movies', function(req, res) {
-    const movies = readDatabase();
-    res.json(movies);
-});
-
-app.get('/api/genres', function(req, res) {
-    const movies = readDatabase();
-    const genres = [...new Set(movies.map(movie => movie.genre))];
-    res.json(genres);
-});
-
-app.post('/api/movies', checkAdmin, function(req, res) {
-    const movies = readDatabase();
-    const body = req.body;
-
-    // Validação básica
-    if (!body.title || !body.genre || !body.poster) {
-        return res.status(400).json({ message: "Macaco esqueceu dados obrigatórios!" });
+// 1. LER TODOS OS FILMES
+app.get('/api/movies', async (req, res) => {
+    try {
+        const movies = await Movie.find(); 
+        res.json(movies);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao abrir o cofre." });
     }
-
-    const lastMovie = movies[movies.length - 1];
-    const newId = lastMovie ? lastMovie.id + 1 : 1;
-
-    // Criando um novo objeto com o ID no TOPO por capricho organizacional
-    const newMovie = {
-        id: newId,
-        ...body
-    };
-
-    movies.push(newMovie);
-    writeDatabase(movies);
-
-    res.status(201).json({
-        message: "Filme adicionado com sucesso!",
-        movie: newMovie
-    });
 });
 
-app.delete('/api/movies/:id', checkAdmin, function(req, res) {
-    const idToDelete = parseInt(req.params.id);
-    let movies = readDatabase();
-
-    const initialLength = movies.length;
-    movies = movies.filter(movie => movie.id !== idToDelete);
-
-    if (movies.length === initialLength) {
-        return res.status(404).json({ error: "Not Found", message: "Filme não encontrado!" });
+// 2. SALVAR FILME NOVO
+app.post('/api/movies', checkAdmin, async (req, res) => {
+    try {
+        const newMovie = await Movie.create(req.body);
+        res.status(201).json({ message: "Filme salvo no cofre!", movie: newMovie });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid request data", details: error.message });
     }
-
-    writeDatabase(movies);
-    res.json({ message: "Filme deletado com sucesso! Cruj-cruj-cruj-Tchau!" });
 });
 
-app.listen(PORT, function() {
-    console.log("🚀 Servidor rodando perfeitamente na porta: " + PORT);
+// 3. DELETAR UM FILME
+app.delete('/api/movies/:id', checkAdmin, async (req, res) => {
+    try {
+        const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
+        if (!deletedMovie) return res.status(404).json({ error: "Filme não encontrado." });
+        res.json({ message: "Filme destruído com sucesso!" });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao tentar deletar o filme." });
+    }
+});
+
+// 4. ATUALIZAR UM FILME EXISTENTE
+app.patch('/api/movies/:id', checkAdmin, async (req, res) => {
+    try {
+        const updatedMovie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!updatedMovie) return res.status(404).json({ error: "Filme não encontrado." });
+        res.json({ message: "Filme tunado com sucesso!", movie: updatedMovie });
+    } catch (error) {
+        res.status(400).json({ error: "Erro na oficina! Verifique os dados.", details: error.message });
+    }
+});
+
+// 5. LER OS GÊNEROS
+app.get('/api/genres', async (req, res) => {
+    try {
+        const genres = await Movie.distinct('genre');
+        res.json(genres);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar os gêneros." });
+    }
+});
+
+// ==========================================
+// LIGAR O MOTOR
+// ==========================================
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando perfeitamente na porta: ${PORT}`);
 });
