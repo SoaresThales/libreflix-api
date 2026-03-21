@@ -35,15 +35,12 @@ database.json
 
 ---
 
-## How to run
+## Run with Docker
 
-1. Clone the repository
-2. Install dependencies:
-   npm install
-3. Start the server:
-   node server.js
-4. Server will run on:
-   http://localhost:3000
+Build and start the API:
+
+docker build -t libreflix-api .
+docker run -p 3000:3000 libreflix-api
    
 ---
 
