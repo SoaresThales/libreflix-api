@@ -36,6 +36,9 @@ const ADMIN_PASSWORD = "WeWillAwaysHaveParis"; // Precisa de aspas para ser uma 
 
 function checkAdmin(req, res, next) {
     const passwordReceive = req.headers['admin-password'];
+    // Log para depuração:
+    console.log("Senha que chegou no servidor:", passwordReceive);
+    console.log("Senha que eu esperava:", ADMIN_PASSWORD);
     if (passwordReceive === ADMIN_PASSWORD) {
         next();
     } else {
