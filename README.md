@@ -39,7 +39,7 @@ database.json
 
 Build and start the API:
 
-docker build -t libreflix-api .
+docker build -t libreflix-api . <br>
 docker run -p 3000:3000 libreflix-api
    
 ---
