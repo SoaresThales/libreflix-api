@@ -4,55 +4,110 @@ REST API for managing a movie catalog, built as part of the LibreFlix project.
 
 ## Overview
 
-This API provides endpoints to list and add movies, evolving from in-memory storage to file-based persistence using Node.js.
+LibreFlix API evolved from a simple in-memory application into a containerized, database-driven backend.
 
-The goal of this project is to understand how a backend works in a real-world scenario, including data handling, persistence, and API design.
+This project focuses on understanding real-world backend architecture, including persistence, validation, security, and containerized environments.
 
 ---
 
-## Tech Stack
+## Tech Stack & Architecture
 
-- Node.js
-- Express
-- File System (fs) for JSON persistence
+* **Runtime:** Node.js (v20 Alpine)
+* **Framework:** Express.js (RESTful API)
+* **Database:** MongoDB (NoSQL)
+* **ODM:** Mongoose (schema modeling & validation)
+* **Infrastructure:** Docker & Docker Compose
+* **Security:** Custom header-based authentication + environment variables (.env)
 
 ---
 
 ## Features
 
-- List all movies
-- Add new movies
-- Persistent storage using `database.json`
-- Automatic ID generation
+* Full CRUD for movies
+* MongoDB persistence with Mongoose
+* Schema-based validation
+* Protected routes (POST, PATCH, DELETE)
+* Dynamic genres endpoint
+* Containerized environment with Docker Compose
 
 ---
 
 ## Project Structure
-/src (planned refactor)
+
+```
 server.js
-database.js
-database.json
+docker-compose.yml
+Dockerfile
+.env (not committed)
+```
 
 ---
 
-## Run with Docker
+## How to Run (Docker - Recommended)
 
-Build and start the API:
+1. Create a `.env` file:
 
-docker build -t libreflix-api . <br>
-docker run -p 3000:3000 libreflix-api
-   
+```
+ADMIN_PASSWORD=your_password
+```
+
+2. Start the application:
+
+```
+docker-compose up --build
+```
+
+3. API will be available at:
+
+```
+http://localhost:3000
+```
+
 ---
 
-## Example Endpoint
+## API Endpoints
 
 ### Get all movies
-GET /movies
 
-### Add a new movie
+```
+GET /api/movies
+```
 
-Body example:
-``json
+### Create movie (protected)
+
+```
+POST /api/movies
+```
+
+Header:
+
+```
+admin-password: your_password
+```
+
+### Update movie (protected)
+
+```
+PATCH /api/movies/:id
+```
+
+### Delete movie (protected)
+
+```
+DELETE /api/movies/:id
+```
+
+### Get genres
+
+```
+GET /api/genres
+```
+
+---
+
+## Example Request Body
+
+```json
 {
   "title": "Movie name",
   "year": 2000,
@@ -61,32 +116,29 @@ Body example:
   "poster": "url",
   "trailer": "url",
   "featured": false
-}``
+}
+```
 
 ---
 
 ## Known Limitations
 
-- No input validation yet
-
-- No concurrency control for file writes
-
-- Entire JSON file is rewritten on each update
+* Authentication is simplified (header-based)
+* No rate limiting
+* No advanced error handling layer yet
 
 ---
 
 ## Next Steps
 
-- Add validation for incoming data
-
-- Improve error handling
-
-- Refactor into controllers and routes
-
-- Replace JSON storage with a database
+* Introduce JWT authentication
+* Add centralized error handling middleware
+* Split into controllers / routes / services
+* Add pagination and filtering
+* Deploy to a cloud platform
 
 ---
 
 ## About
 
-This project is part of my transition into software development, focusing on backend fundamentals and real-world problem solving.
+This project is part of my transition into software development, focusing on building real-world backend systems step by step.
